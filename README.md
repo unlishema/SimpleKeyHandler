@@ -16,7 +16,7 @@ This Library does not Override original functionality; however, there may be som
 
 ### Known Bugs:
 * If you hold a key and change windows the key will stay held down until you change back and press it again. (This is being worked on right now)
-* If you use the default keyPressed, keyReleased, and keyTyped methods there is an issue. It executes them before keyEvent is executed causing an issue of not registering and deregistering keys before method is executed.
+* If you use the default keyPressed, keyReleased, and keyTyped methods there is an issue. It executes them before keyEvent is executed causing an issue of not registering and deregistering keys before method is executed. (Issue found and fix known just needs done)
 
 ## More Information
 If you are wanting to extend this Library for your own Library please take a look at [README_Library.md](https://github.com/unlishema/SimpleKeyHandler/blob/master/README_Library.md).
