@@ -544,13 +544,6 @@ public class SimpleKeyHandler {
 	}
 
 	/**
-	 * Prints the Library Information to the Console for Easy Info Checking
-	 */
-	public void printLibraryInfo() {
-		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
-	}
-
-	/**
 	 * Override the Escape Key functionality that closes the Sketch when you press
 	 * Escape<br>
 	 * <br>
@@ -577,6 +570,13 @@ public class SimpleKeyHandler {
 	public void removeListener(final SimpleKeyListener kel) {
 		if (this.listeners.contains(kel))
 			this.listeners.remove(kel);
+	}
+
+	/**
+	 * Prints the Library Information to the Console for Easy Info Checking
+	 */
+	public void printLibraryInfo() {
+		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
 	}
 
 	/**
