@@ -1,6 +1,6 @@
 import org.unlishema.simpleKeyHandler.*;
 
-SimpleKeyHandler skh = new SimpleKeyHandler(this);
+final SimpleKeyHandler skh = new SimpleKeyHandler(this);
 
 char keyToTest = 'A';
 boolean aAnyPressed = false, aNoModifierPressed = false, stillWorks = false;
@@ -15,27 +15,27 @@ void setup() {
   surface.setResizable(true);
 
   skh.addListener(new SimpleKeyListener() {
-    public void onKeyPressed() {
-      aAnyPressed = skh.isKeyPressed(keyToTest);
-      aNoModifierPressed = skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.NONE, keyToTest);
+    public void onKeyPressed(final SimpleKeyEvent event) {
+      aAnyPressed = event.isKeyPressed(keyToTest);
+      aNoModifierPressed = event.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.NONE, keyToTest);
 
       // NOTICE: If you press a modifier key(s) with these 2 keys it will NOT work btw
-      if (skh.isModifiedKeysPressed(SimpleKeyHandler.ModifierKey.NONE, SimpleKeyHandler.FunctionKey.F3.code, 'Q')) {
+      if (event.isModifiedKeysPressed(SimpleKeyEvent.ModifierKey.NONE, SimpleKeyEvent.FunctionKey.F3.code, 'Q')) {
         skh.overrideEscape(!skh.isOverridingEscape());
       }
 
       // NOTICE: If you press any other key(s) other than just this key it will still work btw
-      if (skh.isOverridingEscape() && skh.isKeyPressed(SimpleKeyHandler.ControlKey.ESCAPE)) { // Override Escape
+      if (skh.isOverridingEscape() && event.isKeyPressed(SimpleKeyEvent.ControlKey.ESCAPE)) { // Override Escape
         println("Exit Pressed... Open Menu Instead?");
       }
     }
 
-    public void onKeyReleased() {
-      aAnyPressed = skh.isKeyPressed(keyToTest);
-      aNoModifierPressed = skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.NONE, keyToTest);
+    public void onKeyReleased(final SimpleKeyEvent event) {
+      aAnyPressed = event.isKeyPressed(keyToTest);
+      aNoModifierPressed = event.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.NONE, keyToTest);
     }
 
-    public void onKeyTyped() {
+    public void onKeyTyped(final SimpleKeyEvent event) {
     }
   }
   );

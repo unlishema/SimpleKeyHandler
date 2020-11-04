@@ -3,7 +3,7 @@ import org.unlishema.simpleKeyHandler.*;
 char keyToTest = 'A';
 String typed = "Press Enter to Type here!";
 boolean typing = false, printKeys = false;
-SimpleKeyHandler skh = new SimpleKeyHandler(this);
+final SimpleKeyHandler skh = new SimpleKeyHandler(this);
 
 /**
  * NOTICE: Until I find a way to determine when window loses and gains focus, there is a glitch where a key can be held if pressed before switching to another window
@@ -16,28 +16,28 @@ void setup() {
 
   skh.overrideEscape(false);
   skh.addListener(new SimpleKeyListener() {
-    public void onKeyPressed() {
+    public void onKeyPressed(final SimpleKeyEvent event) {
       if (printKeys) println("Key Pressed: " + keyCode + "[" + key + "]");
 
       // NOTICE: If you press any other key(s) other than just these 2 keys it will still work btw
-      if (skh.isKeysPressed(SimpleKeyHandler.FunctionKey.F3.code, 'Q')) {
+      if (event.isKeysPressed(SimpleKeyEvent.FunctionKey.F3.code, 'Q')) {
         skh.overrideEscape(!skh.isOverridingEscape());
       }
 
       // NOTICE: If you press a modifier key(s) with these 2 keys it will NOT work btw
-      if (skh.isModifiedKeysPressed(SimpleKeyHandler.ModifierKey.NONE, SimpleKeyHandler.FunctionKey.F3.code, 'P')) {
+      if (event.isModifiedKeysPressed(SimpleKeyEvent.ModifierKey.NONE, SimpleKeyEvent.FunctionKey.F3.code, 'P')) {
         printKeys = !printKeys;
       }
     }
 
-    public void onKeyReleased() {
+    public void onKeyReleased(final SimpleKeyEvent event) {
       if (printKeys) println("Key Released: " + keyCode + "[" + key + "]");
     }
 
-    public void onKeyTyped() {
+    public void onKeyTyped(final SimpleKeyEvent event) {
       if (printKeys) println("Key Typed: " + keyCode + "[" + key + "]");
-      char lastTyped = skh.getLastKeyTyped();
-      if (skh.isOverridingEscape() && lastTyped == SimpleKeyHandler.ControlKey.ESCAPE.code) { // Override Escape
+      char lastTyped = event.getLastKeyTyped();
+      if (skh.isOverridingEscape() && lastTyped == SimpleKeyEvent.ControlKey.ESCAPE.code) { // Override Escape
         if (typing) {
           // Reset for not typing
           typing = false;
@@ -46,12 +46,12 @@ void setup() {
         } else {
           println("Exit Pressed... Open Menu Instead?");
         }
-      } else if (!typing && (lastTyped == SimpleKeyHandler.ControlKey.ENTER.code || lastTyped == SimpleKeyHandler.ControlKey.RETURN.code)) { // Enable Typing
+      } else if (!typing && (lastTyped == SimpleKeyEvent.ControlKey.ENTER.code || lastTyped == SimpleKeyHandler.ControlKey.RETURN.code)) { // Enable Typing
         typing = true;
         skh.overrideEscape(typing);
         typed = "|";
       } else if (typing) { // Control Typing into the string
-        if (lastTyped == SimpleKeyHandler.ControlKey.BACKSPACE.code) { // Backspace
+        if (lastTyped == SimpleKeyEvent.ControlKey.BACKSPACE.code) { // Backspace
           // Remove Caret
           typed = typed.substring(0, typed.length() - 1);
 
@@ -60,9 +60,9 @@ void setup() {
 
           // Add Caret
           typed += "|";
-        } else if (lastTyped == SimpleKeyHandler.ControlKey.DELETE.code) { // Delete
+        } else if (lastTyped == SimpleKeyEvent.ControlKey.DELETE.code) { // Delete
           // TODO need to add in a proper caret for this to work
-        } else if (lastTyped == SimpleKeyHandler.ControlKey.ENTER.code || lastTyped == SimpleKeyHandler.ControlKey.RETURN.code) { // Enter or Return
+        } else if (lastTyped == SimpleKeyEvent.ControlKey.ENTER.code || lastTyped == SimpleKeyHandler.ControlKey.RETURN.code) { // Enter or Return
           if (!typed.equals("|")) {
             // Remove Caret
             typed = typed.substring(0, typed.length() - 1);
@@ -105,24 +105,24 @@ void draw() {
   text("Check Modifiers for Key \"" + this.keyToTest + "\"", w, h + (-5 * textSpacingY));
 
   textAlign(LEFT, CENTER);
-  text("Alt + Ctrl + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_CTRL_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Alt + Ctrl + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_CTRL_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Alt + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Ctrl + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.CTRL_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Atl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Ctrl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.CTRL, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Ctrl + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_CTRL_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Ctrl + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_CTRL_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Ctrl + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.CTRL_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Atl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Ctrl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.CTRL, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
 
   alignX += 2;
   alignY = -4;
   textAlign(RIGHT, CENTER);
-  text("None: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.NONE, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Alt + Ctrl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_CTRL, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Alt + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Alt + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Ctrl + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.CTRL_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Ctrl + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.CTRL_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
-  text("Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));  
-  text("Alt + Ctrl + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyHandler.ModifierKey.ALT_CTRL_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("None: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.NONE, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Ctrl: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_CTRL, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Alt + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Ctrl + Shift: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.CTRL_SHIFT, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Ctrl + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.CTRL_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
+  text("Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));  
+  text("Alt + Ctrl + Shift + Win: " + (!typing && skh.isModifiedKeyPressed(SimpleKeyEvent.ModifierKey.ALT_CTRL_SHIFT_WIN, keyToTest)), w + (alignX * textSpacingX), h + (alignY++ * textSpacingY));
 }
